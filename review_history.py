@@ -1,12 +1,11 @@
 import steamreviews
 import csv
-from datetime import datetime
 
-# List of AppIDs for the games you're interested in
-app_ids = [1959580]  # Example: Team Fortress 2, Dota 2, Counter-Strike: Global Offensive
+# AppID for the games you're interested in
+app_id = 1959580 
 
 # Specify the CSV file name
-csv_file = 'steam_reviews_multiple_games.csv'
+csv_file = f'steam_reviews_{app_id}.csv'
 
 # Open the CSV file for writing
 with open(csv_file, mode='w', newline='', encoding='utf-8') as file:
@@ -14,42 +13,59 @@ with open(csv_file, mode='w', newline='', encoding='utf-8') as file:
     writer = csv.writer(file)
 
     # Write the header row (adjust fields as needed)
-    writer.writerow(['Game AppID', 'Review ID', 'Date', 'Voted Up', 'Votes Up', 'Votes Funny', 'Weighted Vote Score', 'Comment Count', 'Steam Purchase', 'Receieved For Free', 'Written During Early Access'])
+    writer.writerow(['recommendationid', 'gameid',
+                     'steamid', 'num_games_owned', 'num_reviews', 'playtime_forever', 'playtime_last_two_weeks', 'playtime_at_review', 'last_played', # Author features
+                     'language', 'review_length', 'timestamp_created', 'timestamp_updated',
+                     'voted_up', 'votes_up', 'votes_funny', 'weighted_vote_score', 'comment_count', 'steam_purchase',
+                     'received_for_free', 'written_during_early_access', 'hidden_in_steam_china', 'steam_china_location',
+                     'primarily_steam_deck'])
 
-    # Loop through each game AppID
-    for app_id in app_ids:
-        print(f"Downloading reviews for game with AppID {app_id}...")
 
-        # Download all reviews for the current game
-        reviews_dict, query_count = steamreviews.download_reviews_for_app_id(app_id)
+    # BEGIN DOWNLOADING >:(
+    print(f'Downloading reviews for game with AppID {app_id}...')
 
-        # Check if there are reviews
-        if query_count > 0:
-            # Process each review and write to the CSV
-            for review_id, review_data in reviews_dict['reviews'].items():
-                # Convert the timestamp to a readable date format
-                review_date = datetime.utcfromtimestamp(review_data['timestamp_created']).strftime('%Y-%m-%d %H:%M:%S')
+    # Download all reviews for the current game
+    reviews_dict, query_count = steamreviews.download_reviews_for_app_id(app_id)
 
-                # Determine the sentiment (positive/negative) based on 'voted_up'
-                sentiment = "Positive" if review_data['voted_up'] else "Negative"
+    # Check if there are reviews
+    if query_count > 0:
+        # Process each review and write to the CSV
+        for review_id, review_data in reviews_dict['reviews'].items():
 
-                # Write the review data to a row in the CSV
-                writer.writerow([
-                    review_id,
-                    app_id,  # Save the AppID of the game
-                    review_date,
-                    review_data['voted_up'],  # Whether the review is positive
-                    review_data['votes_up'],  # Votes up count
-                    review_data['votes_funny'],  # Votes funny count
-                    sentiment,
-                ])
+            # Write the review data to a row in the CSV
+            writer.writerow([
+                review_id,
+                app_id,
+                review_data['author']['steamid'],
+                review_data['author']['num_games_owned'],
+                review_data['author']['num_reviews'],
+                review_data['author']['playtime_forever'],
+                review_data['author']['playtime_last_two_weeks'],
+                review_data['author']['playtime_at_review'],
+                review_data['author']['last_played'],
+                review_data['language'],
+                len(review_data['review']),
+                review_data['timestamp_created'],
+                review_data['timestamp_updated'],
+                review_data['voted_up'],
+                review_data['votes_up'],
+                review_data['votes_funny'],
+                review_data['weighted_vote_score'],
+                review_data['comment_count'],
+                review_data['steam_purchase'],
+                review_data['received_for_free'],
+                review_data['written_during_early_access'],
+                review_data['hidden_in_steam_china'],
+                review_data['steam_china_location'],
+                review_data['primarily_steam_deck'],
+            ])
 
-                print(review_data)
-            
-            # print(f"Saved {len(reviews_dict['reviews'])} reviews for game with AppID {app_id}.")
-            # print(reviews_dict.keys())
-            # print(reviews_dict['query_summary'])
-        else:
-            print(f"No reviews found for game with AppID {app_id}.")
+            # print(reviews_dict['reviews'])
+        
+        print(f"Saved {len(reviews_dict['reviews'])} reviews for game with AppID {app_id}.")
+        # print(reviews_dict.keys())
+        # print(reviews_dict['query_summary'])
+    else:
+        print(f"No reviews found for game with AppID {app_id}.")
 
 print(f"All reviews saved to '{csv_file}'.")

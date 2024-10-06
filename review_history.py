@@ -133,13 +133,15 @@ def download_reviews_for_app_id(app_id):
             # Check if we've reached the maximum allowed queries, then cooldown
             if query_count >= rate_limits["max_num_queries"]:
                 print(f"Max queries reached. Cooling down for {rate_limits['cooldown']} seconds.")
+                print("Final Cursor:", cursor)
                 time.sleep(rate_limits["cooldown"])
                 query_count = 0  # Reset query count after cooldown
         else:
             print(f"No more reviews to process for app_id {app_id}.")
+            print("Final Cursor:", cursor)
             break
 
 # Example usage:
 if __name__ == "__main__":
-    app_id = 774861  # Example app_id for CS:GO
+    app_id = 440
     download_reviews_for_app_id(app_id)

@@ -4,6 +4,8 @@ import json
 import requests
 from http import HTTPStatus
 
+import math
+
 def get_steam_api_url() -> str:
     return "https://store.steampowered.com/appreviews/"
 
@@ -35,30 +37,30 @@ def write_reviews_to_csv(app_id, reviews):
         for review in reviews:
             # print(review)
             writer.writerow([
-                review['recommendationid'],
+                review.get('recommendationid'),
                 app_id,
-                review['author']['steamid'],
-                review['author']['num_games_owned'],
-                review['author']['num_reviews'],
-                review['author']['playtime_forever'],
-                review['author']['playtime_last_two_weeks'],
-                review['author']['playtime_at_review'],
-                review['author']['last_played'],
-                review['language'],
-                len(review['review']),
-                review['timestamp_created'],
-                review['timestamp_updated'],
-                review['voted_up'],
-                review['votes_up'],
-                review['votes_funny'],
-                review['weighted_vote_score'],
-                review['comment_count'],
-                review['steam_purchase'],
-                review['received_for_free'],
-                review['written_during_early_access'],
-                review['hidden_in_steam_china'],
-                review['steam_china_location'],
-                review['primarily_steam_deck'],
+                review.get('author', {}).get('steamid'),
+                review.get('author', {}).get('num_games_owned'),
+                review.get('author', {}).get('num_reviews'),
+                review.get('author', {}).get('playtime_forever'),
+                review.get('author', {}).get('playtime_last_two_weeks'),
+                review.get('author', {}).get('playtime_at_review'),
+                review.get('author', {}).get('last_played'),
+                review.get('language'),
+                len(review.get('review', '')),
+                review.get('timestamp_created'),
+                review.get('timestamp_updated'),
+                review.get('voted_up'),
+                review.get('votes_up'),
+                review.get('votes_funny'),
+                review.get('weighted_vote_score'),
+                review.get('comment_count'),
+                review.get('steam_purchase'),
+                review.get('received_for_free'),
+                review.get('written_during_early_access'),
+                review.get('hidden_in_steam_china'),
+                review.get('steam_china_location'),
+                review.get('primarily_steam_deck')
             ])
 
 def get_reviews_for_app_id(app_id, cursor="*"):
@@ -106,7 +108,7 @@ def get_reviews_for_app_id(app_id, cursor="*"):
 
 def download_reviews_for_app_id(app_id):
     print(f"Processing app_id {app_id}")
-    cursor = "*"
+    cursor='*'
     query_count = 0
     rate_limits = get_steam_api_rate_limits()
 
@@ -123,6 +125,12 @@ def download_reviews_for_app_id(app_id):
         header = csv.writer(csv_file)
         header.writerow(csv_headers)
 
+    # Tracks estimated completion
+    count = 0 # current iteration
+    review_count = 8300000
+    estimate = math.ceil(review_count / 15000)
+
+
     while cursor:
         reviews, cursor = get_reviews_for_app_id(app_id, cursor)
         
@@ -132,8 +140,10 @@ def download_reviews_for_app_id(app_id):
 
             # Check if we've reached the maximum allowed queries, then cooldown
             if query_count >= rate_limits["max_num_queries"]:
+                count += 1
                 print(f"Max queries reached. Cooling down for {rate_limits['cooldown']} seconds.")
-                print("Final Cursor:", cursor)
+                print("Current Cursor:", cursor)
+                print(f"{count}/{estimate} batches completed")
                 time.sleep(rate_limits["cooldown"])
                 query_count = 0  # Reset query count after cooldown
         else:

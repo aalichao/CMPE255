@@ -1,14 +1,15 @@
+import math
 import csv
-import time
-import json
 import requests
 from http import HTTPStatus
+import time
 
-import math
 
+#Returns the Steam API URL
 def get_steam_api_url() -> str:
     return "https://store.steampowered.com/appreviews/"
 
+#returns dictionary with limit times/counts
 def get_steam_api_rate_limits():
     return {
         "max_num_queries": 150,
@@ -16,6 +17,7 @@ def get_steam_api_rate_limits():
         "cooldown_bad_gateway": 10,
     }
 
+#Returns dictionary with requests parameter args
 def get_default_request_parameters():
     return {
         "json": "1",
@@ -26,6 +28,7 @@ def get_default_request_parameters():
         "num_per_page": "100",  # Maximum number of reviews per request
     }
 
+#Formats and writes the reviews to CSV file
 def write_reviews_to_csv(app_id, reviews):
     csv_filename = f"reviews_{app_id}.csv"
 
@@ -63,7 +66,8 @@ def write_reviews_to_csv(app_id, reviews):
                 review.get('primarily_steam_deck')
             ])
 
-def get_reviews_for_app_id(app_id, cursor="*"):
+
+def get_reviews_for_app_id(app_id, query_count, cursor="*"):
 
     rate_limits = get_steam_api_rate_limits()
 
@@ -101,10 +105,11 @@ def get_reviews_for_app_id(app_id, cursor="*"):
     elif status_code == HTTPStatus.TOO_MANY_REQUESTS:
         print("429 Too Many Requests: Sleeping for 1 hour before retrying...")
         time.sleep(3600 + 10)  # 1 hour sleep with buffer
-        get_reviews_for_app_id(app_id, cursor=cursor) # Retry
+        get_reviews_for_app_id(app_id, query_count, cursor=cursor) # Retry
     else:
         print(f"Failed to fetch reviews for app_id {app_id}, status code: {status_code}")
         return None, None
+
 
 def download_reviews_for_app_id(app_id):
     print(f"Processing app_id {app_id}")
@@ -132,7 +137,7 @@ def download_reviews_for_app_id(app_id):
 
 
     while cursor:
-        reviews, cursor = get_reviews_for_app_id(app_id, cursor)
+        reviews, query_count, cursor = get_reviews_for_app_id(app_id, query_count, cursor)
         
         if reviews:
             write_reviews_to_csv(app_id, reviews)
@@ -153,5 +158,5 @@ def download_reviews_for_app_id(app_id):
 
 # Example usage:
 if __name__ == "__main__":
-    app_id = 440
+    app_id = 730
     download_reviews_for_app_id(app_id)

@@ -1,9 +1,9 @@
 import math
 import csv
+import json
 import requests
 from http import HTTPStatus
 import time
-
 
 #Returns the Steam API URL
 def get_steam_api_url() -> str:
@@ -66,7 +66,6 @@ def write_reviews_to_csv(app_id, reviews):
                 review.get('primarily_steam_deck')
             ])
 
-
 def get_reviews_for_app_id(app_id, query_count, cursor="*"):
 
     rate_limits = get_steam_api_rate_limits()
@@ -113,7 +112,7 @@ def get_reviews_for_app_id(app_id, query_count, cursor="*"):
 
 def download_reviews_for_app_id(app_id):
     print(f"Processing app_id {app_id}")
-    cursor='*'
+    cursor='AoJwgdrdq5EDeLTvkAU='
     query_count = 0
     rate_limits = get_steam_api_rate_limits()
 

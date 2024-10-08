@@ -108,7 +108,7 @@ def get_reviews_for_app_id(app_id, query_count, cursor="*"):
         get_reviews_for_app_id(app_id, query_count, cursor=cursor) # Retry
     else:
         print(f"Failed to fetch reviews for app_id {app_id}, status code: {status_code}")
-        return None, None
+        return None, query_count, cursor=cursor
 
 
 def download_reviews_for_app_id(app_id):

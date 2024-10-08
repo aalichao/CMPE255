@@ -100,7 +100,7 @@ def get_reviews_for_app_id(app_id, query_count, cursor="*"):
         # print(result)
         reviews = result.get("reviews", [])
         next_cursor = result.get("cursor", None)
-        return reviews, next_cursor
+        return reviews, query_count, next_cursor
     # Handle rate limiting
     elif status_code == HTTPStatus.TOO_MANY_REQUESTS:
         print("429 Too Many Requests: Sleeping for 1 hour before retrying...")
@@ -108,7 +108,7 @@ def get_reviews_for_app_id(app_id, query_count, cursor="*"):
         get_reviews_for_app_id(app_id, query_count, cursor=cursor) # Retry
     else:
         print(f"Failed to fetch reviews for app_id {app_id}, status code: {status_code}")
-        return None, query_count, cursor=cursor
+        return None, query_count, None
 
 
 def download_reviews_for_app_id(app_id):

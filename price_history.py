@@ -55,7 +55,7 @@ session = requests.Session()
 
 # https://www.blakeporterneuro.com/learning-python-project-3-scrapping-data-from-steams-community-market/
 # ADD your steamLoginSecure cookie's content below once you log in for scraping (you can only access values if you are logged in)
-steamLoginSecure = "76561198293579906%7C%7CeyAidHlwIjogIkpXVCIsICJhbGciOiAiRWREU0EiIH0.eyAiaXNzIjogInI6MTAyMF8yNTM5RUM5QV8yRjMxQyIsICJzdWIiOiAiNzY1NjExOTgyOTM1Nzk5MDYiLCAiYXVkIjogWyAid2ViOmNvbW11bml0eSIgXSwgImV4cCI6IDE3Mjk1NDE0NzQsICJuYmYiOiAxNzIwODEzMzM4LCAiaWF0IjogMTcyOTQ1MzMzOCwgImp0aSI6ICIxMDJEXzI1MzlFQ0REXzA4Rjc1IiwgIm9hdCI6IDE3Mjk0NTMzMzgsICJydF9leHAiOiAxNzQ3Njg2OTE4LCAicGVyIjogMCwgImlwX3N1YmplY3QiOiAiNzYuMTMzLjEyMS40NyIsICJpcF9jb25maXJtZXIiOiAiNzYuMTMzLjEyMS40NyIgfQ.qAUybypz5knPZ2mCBAJmAYNjclYAdVgZu-PZ3fQM5VGxRDoZubx_FxMfQN9maOqXfkbPIYKd4sOSbbFoTTalDg"
+steamLoginSecure = ""
 cookie = {'steamLoginSecure': steamLoginSecure};
 
 # Function to encode item name for URL

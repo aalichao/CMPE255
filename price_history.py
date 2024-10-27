@@ -73,15 +73,24 @@ def get_price_history(game_id, item_name):
     print(f"Fetching price history from: {url}")
 
     response = session.get(url, cookies=cookie)
+    # Check status code
+    print("Status Code:", response.status_code)
+
+    # Typical response codes: 200 (OK), 500 (No Content), 429 (Rate Limited)
+
+    if response.status_code == 429 or response.status_code == 502:
+        time.sleep(10)
+        return get_price_history(game_id, item_name)
+
     data = response.json()
 
-    if 'prices' in data:
+    if 'prices' in data: # 200 OK
         return data['prices']
-    else:
+    else: # 500 NO CONTENT
         return []
 
 # Function to write price history to a CSV file
-def write_to_csv(data, item_name, parent, filename=f"steam_730_price_history.csv"):
+def write_to_csv(data, item_name, parent, filename):
 
     # Overwrite CSV file with new fetched info
     with open(filename, mode='a', encoding='utf-8', newline='') as file:
@@ -95,10 +104,10 @@ def write_to_csv(data, item_name, parent, filename=f"steam_730_price_history.csv
 
 if __name__ == "__main__":
     game_id = 730
-    filename = "steam_730_price_history.csv"
+    output = "steam_730_4_price_history.csv"
 
     # Create the file
-    with open(filename, mode='w', newline='') as file:
+    with open(output, mode='w', newline='') as file:
         writer = csv.writer(file)
 
         # If the file is newly created or empty, write the header
@@ -106,26 +115,28 @@ if __name__ == "__main__":
 
 
     for parent, children in family.items():
+        # parent
         price_history = get_price_history(game_id, parent)
         if price_history:
-            write_to_csv(price_history, parent, None)
+            write_to_csv(price_history, parent, None, output)
         print(f"Fetched {0 if not price_history else len(price_history)} records for {parent}.")
         time.sleep(3)
         
         conditions = ['(Battle-Scarred)', '(Well-Worn)', '(Field-Tested)', '(Minimal Wear)', '(Factory New)']
 
+        # children
         for child in children:
             for condition in conditions:
                 price_history = get_price_history(game_id, child + ' ' + condition)
                 if price_history:
-                    write_to_csv(price_history, child + ' ' + condition, parent)
+                    write_to_csv(price_history, child + ' ' + condition, parent, output)
                 print(f"Fetched {0 if not price_history else len(price_history)} records for {child + ' ' + condition}.")
                 time.sleep(3)
 
                 # Prepend Stattrak
                 price_history = get_price_history(game_id, 'StatTrak™ ' + child + ' ' + condition)
                 if price_history:
-                    write_to_csv(price_history, 'StatTrak ' + child + ' ' + condition, parent) # Not including the ™ symbol because it is unidentifiable
+                    write_to_csv(price_history, 'StatTrak ' + child + ' ' + condition, parent, output) # Not including the ™ symbol because it is unidentifiable
                 print(f"Fetched {0 if not price_history else len(price_history)} records for {'StatTrak™ ' + child + ' ' + condition}.")
                 time.sleep(3)
 

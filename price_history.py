@@ -16,6 +16,30 @@ import urllib.parse
 
 # Will use parent dictionary later to add column/feature to item
 family = {
+    "Mann Co. Supply Crate Series #32": ["Strange Brass Beast", "Strange Ubersaw", "Strange L'Etranger", "Strange Equalizer"],
+    "Mann Co. Supply Crate Series #33": ["Strange Soda Popper", "Strange Family Business", "Strange Amputator", "Strange Your Eternal Reward"],
+    "Mann Co. Supply Crate Series #34" : ["Strange Reserve Shooter", "Strange Atomizer", "Strange Southern Hospitality", "Strange Scottish Resistance"],
+    "Naughty Winter Crate Series #35" : ["Strange Festive Scattergun", "Strange Festive BatFestive Bat", "Strange Festive Rocket Launcher", "Strange Festive Flame Thrower", "Strange Festive Stickybomb Launcher", "Strange Festive Minigun", "Strange Festive Wrench", "Strange Festive Medi Gun", "Strange Festive Sniper Rifle", "Strange Festive Knife"],
+    "Nice Winter Crate Series #36" : ["Strange Wrap Assassin", "Strange Holiday Punch", "Strange Spy-cicle"],
+    "Mann Co. Supply Crate Series #37" : ["Strange Bazaar Bargain", "Strange Big Earner", "Strange Blutsauger", "Strange Liberty Launcher"],
+    "Mann Co. Supply Crate Series #38" : ["Strange Dead Ringer", "Strange SMG", "Strange Quick-Fix", "Strange Killing Gloves of Boxing"],
+    "Mann Co. Supply Crate Series #39" : ["Strange Loch-n-Load", "Strange Overdose", "Strange Knife"],
+    "Salvaged Mann Co. Supply Crate Series #40" : ["Strange Holiday Punch", "Strange Huntsman", "Strange Widowmaker"],
+    "Mann Co. Supply Crate Series #41" : ["Strange Bat", "Strange Direct Hit", "Strange Diamondback"],
+    "Mann Co. Supply Crate Series #42" : ["Strange Bottle", "Strange Back Scratcher", "Strange Pistol"],
+    "Mann Co. Supply Crate Series #43" : ["Strange Tribalman's Shiv", "Strange Detonator", "Strange Shortstop"],
+    "Mann Co. Supply Crate Series #44" : ["Strange Rocket Launcher", "Strange Market Gardener", "Strange Equalizer"],
+    "Mann Co. Supply Crate Series #45" : ["Strange Stickybomb Launcher", "Strange Scotsman's Skullcutter", "Strange Persian Persuader"],
+    "Scorched Crate Series #46" : ["Strange Lollichop", "Strange Rainblower"],
+    "Mann Co. Supply Crate Series #47" : ["Strange Force-A-Nature", "Strange Flame Thrower", "Strange Tomislav"],
+    "Mann Co. Supply Crate Series #49" : ["Strange Homewrecker", "Strange Shovel", "Strange Scattergun"],
+    "Naughty Winter Crate 2012 Series #52" : ["Strange Festive Holy Mackerel", "Strange Festive Axtinguisher", "Strange Festive Buff Banner", "Strange Festive Sandvich", "Strange Festive Ubersaw", "Strange Festive Frontier Justice", "Strange Festive Huntsman", "Strange Festive Grenade Launcher"],
+    "Mann Co. Supply Crate Series #54" : ["Strange Wrap Assassin", "Strange Spy-cicle", "Strange Sniper Rifle"],
+    "Mann Co. Supply Crate Series #55" : ["Strange Baby Face's Blaster", "Strange Pain Train", "Strange Medi Gun"],
+    "Mann Co. Supply Crate Series #56" : ["Strange Fire Axe", "Strange Flying Guillotine", "Strange Beggar's Bazooka"],
+    "Mann Co. Supply Crate Series #57" : ["Strange Fists of Steel", "Strange Neon Annihilator", "Strange Jarate"],
+    "Mann Co. Supply Crate Series #59" : ["Strange Kukri", "Strange Huo-Long Heater", "Strange Enforcer"],
+    "Select Reserve Mann Co. Supply Crate Series #60" : ["Strange Disciplinary Action", "Strange Loose Cannon", "Strange Fan O'War"],
     "Mann Co. Supply Crate Series #71" : ['Strange Bonk! Atomic Punch', "Strange Hitman's Heatmaker", "Strange Battalion's Backup"],
     "Mann Co. Supply Crate Series #75" : ['Strange Crit-a-Cola', 'Strange Solemn Vow', 'Strange Sydney Sleeper'],
     "Mann Co. Supply Crate Series #76" : ['Strange Concheror', 'Strange Revolver', 'Strange Eviction Notice'],
@@ -33,7 +57,7 @@ session = requests.Session()
 
 # https://www.blakeporterneuro.com/learning-python-project-3-scrapping-data-from-steams-community-market/
 # ADD your steamLoginSecure cookie's content below once you log in for scraping (you can only access values if you are logged in)
-content = "76561198044346545%7C%7CeyAidHlwIjogIkpXVCIsICJhbGciOiAiRWREU0EiIH0.eyAiaXNzIjogInI6MTAyRF8yNTQxQzlGRF83RkEzOCIsICJzdWIiOiAiNzY1NjExOTgwNDQzNDY1NDUiLCAiYXVkIjogWyAid2ViOmNvbW11bml0eSIgXSwgImV4cCI6IDE3Mjk3NDQwNzQsICJuYmYiOiAxNzIxMDE3MzgzLCAiaWF0IjogMTcyOTY1NzM4MywgImp0aSI6ICIxMDFCXzI1NDFDOUZGXzdENTYyIiwgIm9hdCI6IDE3Mjk2NTczODMsICJydF9leHAiOiAxNzQ3NTY2MDIxLCAicGVyIjogMCwgImlwX3N1YmplY3QiOiAiNjcuMTg4LjYwLjQ1IiwgImlwX2NvbmZpcm1lciI6ICI2Ny4xODguNjAuNDUiIH0.MLP_ooTBgM4zSgt_trVle_qKxjFJ75Lahw3Zz7688Vce9QZ1szQBzvX5XwXj35Zde5KMIg76dmabI1SnRvUcAA"
+content = "76561198044346545%7C%7CeyAidHlwIjogIkpXVCIsICJhbGciOiAiRWREU0EiIH0.eyAiaXNzIjogInI6MTAyN18yNTQxQ0EyQV84QTNERSIsICJzdWIiOiAiNzY1NjExOTgwNDQzNDY1NDUiLCAiYXVkIjogWyAid2ViOmNvbW11bml0eSIgXSwgImV4cCI6IDE3MzAwNjA3MDQsICJuYmYiOiAxNzIxMzMzODMxLCAiaWF0IjogMTcyOTk3MzgzMSwgImp0aSI6ICIxMDFCXzI1NDFDQTI5XzVFQjlEIiwgIm9hdCI6IDE3Mjk5NzM4MzEsICJydF9leHAiOiAxNzQ4NTU3NzI3LCAicGVyIjogMCwgImlwX3N1YmplY3QiOiAiNjcuMTg4LjYwLjQ1IiwgImlwX2NvbmZpcm1lciI6ICI2Ny4xODguNjAuNDUiIH0.YMAPYXtPHcoc31ZVQwNSPVXtK0RzoNU79E33PEI1YzIfOnXkt2fACi2dMapOEOF4BHVpv90TnIa5An1GL4WWCQ"
 cookie = {'steamLoginSecure': content};
 
 # Function to encode item name for URL
@@ -59,7 +83,7 @@ def get_price_history(game_id, item_name):
         return []
 
 # Function to write price history to a CSV file
-def write_to_csv(data, item_name, parent, filename="steam_price_history_tf2_71-92.csv"):
+def write_to_csv(data, item_name, parent, filename="steam_price_history_tf2_32-103.csv"):
 
     #Overwrite CSV file with new fetched info
     with open(filename, mode='a', encoding='utf-8', newline='') as file:

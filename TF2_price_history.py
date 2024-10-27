@@ -82,24 +82,32 @@ if __name__ == "__main__":
 
         qualities = ['Strange', 'Unusual', 'Specialized', 'Professional'] # 'Vintage', 'Genuine', 'Haunted', "Collector's"]
         
-        conditions = ['(Battle-Scarred)', '(Well-Worn)', '(Field-Tested)', '(Minimal Wear)', '(Factory New)']
+        # conditions = ['(Battle-Scarred)', '(Well-Worn)', '(Field-Tested)', '(Minimal Wear)', '(Factory New)']
 
         # children
         for child in children:
-            for condition in conditions:
-                price_history = get_price_history(game_id, child + f' {condition}')
-                if price_history:
-                    write_to_csv(price_history, child + ' ' + condition, parent, output)
-                print(f"Fetched {0 if not price_history else len(price_history)} records for {child + ' ' + condition}.")
-                time.sleep(3)
+            # Case for no quality or condition
+            price_history = get_price_history(game_id, child)
+            if price_history:
+                write_to_csv(price_history, child, parent, output)
+            print(f"Fetched {0 if not price_history else len(price_history)} records for {child}.")
+            time.sleep(3)
 
-                # Prepend Quality
-                for quality in qualities:
-                    price_history = get_price_history(game_id, quality + ' ' + child + f' {condition}')
-                    if price_history:
-                        write_to_csv(price_history, f'{quality} ' + child + ' ' + condition, parent, output) # Not including the ™ symbol because it is unidentifiable
-                    print(f"Fetched {0 if not price_history else len(price_history)} records for {quality + ' ' + child + ' ' + condition}.")
-                    time.sleep(3)
+            # for condition in conditions:
+            #     # mandatory condition
+            #     price_history = get_price_history(game_id, child + f' {condition}')
+            #     if price_history:
+            #         write_to_csv(price_history, child + ' ' + condition, parent, output)
+            #     print(f"Fetched {0 if not price_history else len(price_history)} records for {child + ' ' + condition}.")
+            #     time.sleep(3)
+
+            # Prepend Quality
+            for quality in qualities:
+                price_history = get_price_history(game_id, quality + ' ' + child)
+                if price_history:
+                    write_to_csv(price_history, f'{quality} ' + child, parent, output) # Not including the ™ symbol because it is unidentifiable
+                print(f"Fetched {0 if not price_history else len(price_history)} records for {quality + ' ' + child}.")
+                time.sleep(3)
 
     # for game_id, item_name in game_items:
     #     price_history = get_price_history(game_id, item_name)
